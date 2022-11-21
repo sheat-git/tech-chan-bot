@@ -86,7 +86,7 @@ const replyConfirm = async (
     } else if (attachment) {
         embed.addFields({
             name: 'File',
-            value: attachment.name ? `[${attachment.name}]{${attachment.url}}` : attachment.url
+            value: attachment.name ? `[${attachment.name}](${attachment.url})` : attachment.url
         });
     }
     options.embeds = [embed];
