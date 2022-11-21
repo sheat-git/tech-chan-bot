@@ -41,7 +41,7 @@ export const handleMessageLink = async (message: Message) => {
         }
     }));
     const embeds = await Promise.all(messages.filter(notNull).slice(0, 10).map(async message => {
-        if (message.embeds.length) {
+        if (message.embeds.length && !message.content.length) {
             return message.embeds[0];
         }
         const embed = new EmbedBuilder()
