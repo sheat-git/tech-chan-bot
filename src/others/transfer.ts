@@ -3,6 +3,7 @@ import {
     ButtonBuilder,
     ButtonInteraction,
     ButtonStyle,
+    ChannelType,
     EmbedBuilder as NormalEmbedBuilder,
     Message,
     MessageActionRowComponentBuilder,
@@ -35,6 +36,16 @@ export const handleMessageLink = async (message: Message) => {
             const guild = client.guilds.cache.get(link.guildId) ?? await client.guilds.fetch(link.guildId);
             const channel = guild.channels.cache.get(link.channelId) ?? await guild.channels.fetch(link.channelId);
             if (!channel || !channel.isTextBased()) { throw new Error('Invalid channel'); }
+            const member = await (async () => {
+                if (channel.isThread()) {
+                    if (channel.type === ChannelType.PrivateThread) {
+                        return await channel.members.fetch(message.author.id);
+                    }
+                    return channel.parent?.members.get(message.author.id);
+                }
+                return channel.members.get(message.author.id);
+            })();
+            if (!member) { throw new Error('Channel that user can\'t see'); }
             return channel.messages.cache.get(link.messageId) ?? await channel.messages.fetch(link.messageId);
         } catch {
             return null;
