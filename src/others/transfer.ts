@@ -16,7 +16,7 @@ import EmbedBuilder from '../components/embed';
 const interactions: {[messageId: Snowflake]: RepliableInteraction} = {};
 
 const matchMessageLinks = (text: string): {guildId: string, channelId: string, messageId: string}[] => {
-    const links = text.match(/https:\/\/discord.com\/channels\/\d+\/\d+\/\d+/g);
+    const links = text.match(/https:\/\/discord(app)?.com\/channels\/\d+\/\d+\/\d+/g);
     if (!links) { return []; }
     return links.map(link => {
         const ids = link.match(/\d+/g);
@@ -35,17 +35,9 @@ export const handleMessageLink = async (message: Message) => {
         try {
             const guild = client.guilds.cache.get(link.guildId) ?? await client.guilds.fetch(link.guildId);
             const channel = guild.channels.cache.get(link.channelId) ?? await guild.channels.fetch(link.channelId);
-            if (!channel || !channel.isTextBased()) { throw new Error('Invalid channel'); }
-            const member = await (async () => {
-                if (channel.isThread()) {
-                    if (channel.type === ChannelType.PrivateThread) {
-                        return await channel.members.fetch(message.author.id);
-                    }
-                    return channel.parent?.members.get(message.author.id);
-                }
-                return channel.members.get(message.author.id);
-            })();
-            if (!member) { throw new Error('Channel that user can\'t see'); }
+            if (!channel?.isTextBased()) { throw new Error('Invalid channel'); }
+            const member = guild.members.cache.get(message.author.id) ?? await guild.members.fetch(message.author.id);
+            if (!member.permissionsIn(channel.id).has('ViewChannel')) { throw new Error('Channel that user can\'t view'); }
             return channel.messages.cache.get(link.messageId) ?? await channel.messages.fetch(link.messageId);
         } catch {
             return null;
