@@ -90,7 +90,9 @@ export const handleMessageLink = async (message: Message) => {
         }
         if (!message.channel.isDMBased()) {
             embed.setFooter({
-                text: '#'+message.channel.name,
+                text: '#'+ (message.channel.isThread()
+                    ? message.channel.parent?.name ?? message.channel.name
+                    : message.channel.name),
                 iconURL: message.channel.guild.iconURL() ?? undefined
             });
         }
