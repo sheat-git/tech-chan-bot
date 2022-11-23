@@ -12,7 +12,8 @@ import {
     InteractionType,
     ButtonInteraction,
     ApplicationCommandType,
-    ComponentType
+    ComponentType,
+    ActivityType
 } from 'discord.js';
 import {
     buildAttendCommand,
@@ -66,6 +67,13 @@ client.once('ready', async () => {
             }
         )
     ], PLANNING_GUILD_ID);
+    const version = process.env.npm_package_version;
+    if (version) {
+        client.user?.setActivity({
+            name: 'v'+version,
+            type: ActivityType.Streaming
+        });
+    }
     console.log('bot ready!');
 });
 
