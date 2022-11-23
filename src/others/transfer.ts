@@ -71,7 +71,7 @@ export const handleMessageLink = async (message: Message) => {
             if (image) {
                 embed.setImage(image.url);
             }
-            if (message.attachments.size > 1) {
+            if (!image || message.attachments.size > 1) {
                 embed.addFields([{
                     name: 'Attachments',
                     value: message.attachments.map(attachment => 
