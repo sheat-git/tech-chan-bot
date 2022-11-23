@@ -2,8 +2,8 @@ name: ci
 
 on:
   push:
-    branches:
-      - 'main'
+    tags:
+      - v*
 
 jobs:
   docker:
@@ -30,4 +30,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: sheat/tech-chan-bot
+          tags: sheat/tech-chan-bot:latest,sheat/tech-chan-bot:${{ env.RELEASE_VERSION }}
