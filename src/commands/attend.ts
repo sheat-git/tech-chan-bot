@@ -123,8 +123,7 @@ export const handleAttendReaction = async (
     if (!isAttendReaction(reaction)) { return; }
     const message = await (async () => {
         if (!reaction.message.partial) { return reaction.message; }
-        const channelId = reaction.message.channelId;
-        const channel = client.channels.cache.get(channelId) ?? await client.channels.fetch(channelId);
+        const channel = await client.channels.fetch(reaction.message.channelId);
         if (!channel || !channel.isTextBased()) { throw new Error('Invalid channel'); }
         return await channel.messages.fetch(reaction.message.id);
     })();
@@ -144,7 +143,7 @@ export const handleAttendReaction = async (
         })();
         users.delete(botId);
         const members: GuildMember[] = await Promise.all(users.map(async user => {
-            return guild.members.resolve(user.id) ?? await guild.members.fetch(user.id);
+            return await guild.members.fetch(user.id);
         }));
         allMembers[reaction.emoji.toString()] = members;
     }));

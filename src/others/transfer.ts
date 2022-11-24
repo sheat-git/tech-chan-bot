@@ -33,12 +33,12 @@ export const handleMessageLink = async (message: Message) => {
     const links = matchMessageLinks(message.content);
     const messages: (Message|null)[] = await Promise.all(links.map(async link => {
         try {
-            const guild = client.guilds.cache.get(link.guildId) ?? await client.guilds.fetch(link.guildId);
-            const channel = guild.channels.cache.get(link.channelId) ?? await guild.channels.fetch(link.channelId);
+            const guild = await client.guilds.fetch(link.guildId);
+            const channel = await guild.channels.fetch(link.channelId);
             if (!channel?.isTextBased()) { throw new Error('Invalid channel'); }
-            const member = guild.members.cache.get(message.author.id) ?? await guild.members.fetch(message.author.id);
+            const member = await guild.members.fetch(message.author.id);
             if (!member.permissionsIn(channel.id).has('ViewChannel')) { throw new Error('Channel that user can\'t view'); }
-            return channel.messages.cache.get(link.messageId) ?? await channel.messages.fetch(link.messageId);
+            return await channel.messages.fetch(link.messageId);
         } catch {
             return null;
         }
@@ -55,7 +55,7 @@ export const handleMessageLink = async (message: Message) => {
                 iconURL: message.author.displayAvatarURL()
             });
         try {
-            const member = message.guild?.members.cache.get(message.author.id) ?? await message.guild?.members.fetch(message.author.id);
+            const member = await message.guild?.members.fetch(message.author.id);
             if (member) {
                 embed.setAuthor({
                     name: member.displayName,
@@ -159,11 +159,11 @@ export const handleDeleteMessageLinkDetails = async (interaction: ButtonInteract
             throw new Error('Invalid Message Reference');
         }
         const client = interaction.client;
-        const channel = interaction.channel ?? client.channels.cache.get(ref.channelId) ?? await client.channels.fetch(ref.channelId);
+        const channel = interaction.channel ?? await client.channels.fetch(ref.channelId);
         if (!channel || !channel.isTextBased()) {
             throw new Error('Invalid Channel');
         }
-        const message = channel.messages.cache.get(ref.messageId) ?? await channel.messages.fetch(ref.messageId);
+        const message = await channel.messages.fetch(ref.messageId);
         try {
             await message.delete();
         } catch {

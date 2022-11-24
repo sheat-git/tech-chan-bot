@@ -119,11 +119,6 @@ client.on('messageReactionRemove', async (reaction: MessageReaction | PartialMes
     }
 });
 
-const buttonInteractionHandlers: {[name: string]: (interaction: ButtonInteraction) => Promise<void>} = {
-    'confirmDeleteMessageLinkDetails': handleConfirmDeleteMessageLinkDetails,
-    'deleteMessageLinkDetails': handleDeleteMessageLinkDetails
-};
-
 client.on('interactionCreate', async (interaction: Interaction) => {
     if (interaction.user.bot) { return; }
     try {
