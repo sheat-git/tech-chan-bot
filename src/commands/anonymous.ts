@@ -25,7 +25,7 @@ const interactions: {[messageId: Snowflake]: RepliableInteraction} = {};
 export const buildAnonymousCommand = (): ApplicationCommandDataResolvable => {
     return new SlashCommandBuilder()
         .setName('anonymous')
-        .setNameLocalization('ja', '匿名')
+        .setNameLocalization('ja', 'とくめい')
         .setDescription('Chat anonymously')
         .setDescriptionLocalization('ja', '匿名で発言')
         .addStringOption( option =>

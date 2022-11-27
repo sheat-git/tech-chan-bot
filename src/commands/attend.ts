@@ -18,7 +18,7 @@ export const buildAttendCommand = (guildId: Snowflake, roles: Roles): Applicatio
     guilds[guildId] = roles;
     return new SlashCommandBuilder()
         .setName('attend')
-        .setNameLocalization('ja', '出欠確認')
+        .setNameLocalization('ja', 'しゅっけつ')
         .setDescription('Confirm attendance by reactions')
         .setDescriptionLocalization('ja', 'リアクションで出欠確認')
         .addStringOption( option =>
