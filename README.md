@@ -6,7 +6,7 @@
 
 - [Docker Hub](https://hub.docker.com/r/sheat/tech-chan-bot)
 
-## 設定
+## 環境変数
 
 - `BOT_TOKEN`: Discord botのトークン
 
